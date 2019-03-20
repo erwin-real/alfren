@@ -38,8 +38,21 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create() {
+        $products = collect();
+        $isValid = true;
+
+        foreach (Product::all() as $product) {
+            foreach ($product->stockToProducts as $stockToProduct) {
+                if ($stockToProduct->stock->stocks < $stockToProduct->quantity) $isValid = false;
+            }
+            if ($isValid) {
+                $products->push($product);
+                $isValid = true;
+            }
+        }
+
         return view('orders.create')
-            ->with('products', Product::all());
+            ->with('products', $products);
     }
 
     /**
@@ -49,6 +62,7 @@ class OrderController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function proceed(Request $request) {
+//        dd($request);
         $my_arr = $request->get('products');
         $dups = $new_arr = array();
         foreach ($my_arr as $key => $val) {
@@ -65,10 +79,14 @@ class OrderController extends Controller
 
         $quantities = collect();
         $products = collect();
+        $prices = collect();
+        $subtotals = collect();
         $totalCapacity = 0.0;
         for ($i = 0; $i < count($request->input('quantity')); $i++) {
-            $quantities->push($request->input('quantity')[$i]);
             $products->push(Product::find($request->input('products')[$i]));
+            $quantities->push($request->input('quantity')[$i]);
+            $prices->push($request->input('price')[$i]);
+            $subtotals->push($request->input('quantity')[$i] * $request->input('price')[$i]);
             $totalCapacity += ($products[$i]->capacity * $quantities[$i]);
         }
 
@@ -106,6 +124,9 @@ class OrderController extends Controller
             ->with('totalCapacity', $totalCap)
             ->with('readyBy', $readyBy)
             ->with('quantities', $quantities)
+            ->with('prices', $prices)
+            ->with('subtotals', $subtotals)
+            ->with('total', $request->input('total'))
             ->with('left', $this->computeLeft())
             ->with('capacities', Capacity::all())
             ->with('dups', $dups);
@@ -120,12 +141,14 @@ class OrderController extends Controller
     public function store(Request $request) {
         $ids = $request->input('products');
         $quantities = $request->input('quantities');
+        $prices = $request->input('prices');
         $totalCapacity = $request->input('totalCapacity');
 
         $order = new Order;
         $order->name = $request->input('client');
         $order->total_capacity = $request->input('totalCapacity');
         $order->ready_by = null;
+        $order->total = $request->input('total');
         $order->save();
 
         for ($i = 0; $i < count($ids); $i++) {
@@ -133,6 +156,7 @@ class OrderController extends Controller
             $singleOrder->order_id = $order->id;
             $singleOrder->product_id = $ids[$i];
             $singleOrder->quantity = $quantities[$i];
+            $singleOrder->price = $prices[$i];
             $singleOrder->save();
 
             $product = Product::find($ids[$i]);

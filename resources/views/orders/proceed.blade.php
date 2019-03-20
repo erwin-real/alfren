@@ -42,6 +42,8 @@
                         <th>Description</th>
                         <th>Capacity (hours)</th>
                         <th>Quantity</th>
+                        <th>Price/unit</th>
+                        <th>Subtotal</th>
                     </tr>
                     </thead>
                     <tbody id="materialsBody">
@@ -61,11 +63,24 @@
                                     <span>{{$quantities[$i]}}</span>
                                     <input type="text" class="form-control" name="quantities[]" required value="{{$quantities[$i]}}" hidden>
                                 </td>
+                                <td>
+                                    <span>{{$prices[$i]}}</span>
+                                    <input type="text" class="form-control" name="prices[]" required value="{{$prices[$i]}}" hidden>
+                                </td>
+                                <td>
+                                    <span>{{$subtotals[$i]}}</span>
+                                    <input type="text" class="form-control" name="subtotals[]" required value="{{$subtotals[$i]}}" hidden>
+                                </td>
                             </tr>
                         @endfor
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
+            <label for="name">Total Cost</label>
+            <input type="number" class="form-control" name="total" required value="{{$total}}" readonly>
         </div>
 
         <div class="form-group col-12 col-md-5 col-sm-8 mt-4">

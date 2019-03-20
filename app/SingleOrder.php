@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class SingleOrder extends Model
 {
+    protected $fillable = [
+        'order_id', 'product_id', 'price', 'quantity'
+    ];
+
     // Table Name
     protected $table = 'single_orders';
 

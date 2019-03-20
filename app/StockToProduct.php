@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class StockToProduct extends Model
 {
+    protected $fillable = [
+        'stock_id', 'product_id', 'quantity'
+    ];
+
     // Table Name
     protected $table = 'stock_to_products';
 

@@ -8,7 +8,7 @@ class Stock extends Model
 {
     protected $fillable = [
         'name', 'category', 'description',
-        'stocks'
+        'stocks', 'demand'
     ];
 
 //    public $sortable = [

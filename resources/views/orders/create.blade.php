@@ -31,6 +31,8 @@
                             <br><small>Produce Name | Description | Capacity</small>
                         </th>
                         <th>Quantity <span class="text-danger">*</span></th>
+                        <th>Price/unit <span class="text-danger">*</span></th>
+                        <th>Subtotal</th>
                         <th>Delete</th>
                     </tr>
                     </thead>
@@ -38,6 +40,10 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
+            <label for="total">Total</label>: <b><input id="total" class="form-control" type="text" name="total" readonly="readonly"></b>
         </div>
 
         <div class="form-group col-12">
@@ -57,7 +63,7 @@
     var totalProducts = {{count($products)}}
     @foreach($products as $product)
         values.push(
-            '{{{$product->name}}}' + ' | ' + convert(test(' {{  $product->description}}')) + ' | ' + ' {{$product->capacity}} hours'
+            convert(test('{{{$product->name}}}' + ' | ' + ' {{  $product->description}}' + ' | ' +' {{$product->capacity}} hours'))
         );
         ids.push('{{$product->id}}');
     @endforeach
@@ -68,10 +74,7 @@
         })
     }
 
-    function test(string) {
-        return string.replace(/&quot;/g,'"');
-
-    }
+    function test(string) { return string.replace(/&quot;/g,'"'); }
 
     function addRow() {
         if (document.getElementsByClassName('select-class').length < totalProducts ) {
@@ -105,9 +108,27 @@
             node_number.name = 'quantity[]';
             node_number.className = 'form-control';
             node_number.setAttribute("required", "required");
+            node_number.setAttribute("onkeyup","updateSubtotal(this)");
             td.appendChild(node_number);
             tr.appendChild(td);
 
+            //PRICE
+            td = document.createElement("td");
+            let node_price = document.createElement("input");
+            node_price.type = 'number';
+            node_price.name = 'price[]';
+            node_price.className = 'form-control';
+            node_price.setAttribute("required", "required");
+            node_price.setAttribute("step", "0.01");
+            node_price.setAttribute("onkeyup","updateSubtotal(this)");
+            td.appendChild(node_price);
+            tr.appendChild(td);
+
+            //SUBTOTAL
+            td = document.createElement("td");
+            let node_subtotal = document.createTextNode("0");
+            td.appendChild(node_subtotal);
+            tr.appendChild(td);
 
             //DELETE BTN
             td = document.createElement("td");
@@ -124,6 +145,26 @@
         }
 
     }
+
+    function updateSubtotal(r) {
+        var temp = 0;
+        var node = r.parentNode.parentNode.children;
+        var quantity = node[1].children[0].value;
+        var price = node[2].children[0].value;
+        node[3].innerText = price * quantity;
+        setTotal();
+    }
+
+    function setTotal() {
+        var temp = 0;
+        var tBodyChildren = document.getElementById('materialsBody').children;
+        for(var i = 0; i < tBodyChildren.length; i++)
+            temp += parseFloat(tBodyChildren[i].children[3].innerText);
+        // console.log(parseFloat(tBodyChildren[i].children[3].innerText));
+
+        document.getElementById("total").value = temp;
+    }
+
     function deleteRow(r) {
         let i = (r.parentNode.parentNode.rowIndex);
         document.getElementById("materialsTable").deleteRow(i);

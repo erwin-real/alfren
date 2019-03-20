@@ -19,6 +19,7 @@
             <p><b>Client's Name</b>: <br>&nbsp;&nbsp; {{$order->name}}</p>
             <p><b>Date Created</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->created_at))}}</p>
             <p><b>Ready By</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->ready_by))}}</p>
+            <p><b>Total Cost</b>: <br>&nbsp;&nbsp; {{$order->total}}</p>
 
             <div class="w-100 text-center mb-4">
                 <a href="/orders/export/{{$order->id}}" target="_blank" class="btn btn-outline-success"><i class="fa fa-file-invoice"></i> EXPORT</a>
@@ -40,6 +41,8 @@
                                     <th>Name</th>
                                     <th>Description</th>
                                     <th>Quantity</th>
+                                    <th>Price/Unit</th>
+                                    <th>Subtotal</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -48,6 +51,8 @@
                                         <td>{{$item->product['name']}}</td>
                                         <td>{{$item->product['description']}}</td>
                                         <td>{{$item->quantity}}</td>
+                                        <td>{{$item->price}}</td>
+                                        <td>{{$item->quantity * $item->price}}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>

@@ -44,20 +44,24 @@ class StockController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request) {
-        $this->validate($request, [
+        $validatedData = $request->validate([
             'name' => 'required',
             'category' => 'required',
             'description' => 'required',
-            'stocks' => 'required'
-//            'procurement' => 'required'
+            'stocks' => 'required',
+            'unit' => 'required',
+            'demand' => 'required'
         ]);
+
 
         $stock = Stock::firstOrNew([
-            'name'=>$request->input('name'),
-            'category'=>$request->input('category'),
-            'description'=>$request->input('description')
+            'name' => $validatedData['name'],
+            'category' => $validatedData['category'],
+            'description' => $validatedData['description'],
+            'unit' => $validatedData['unit'],
+            'demand' => $validatedData['demand']
         ]);
-
+        $stock->unit = $validatedData['unit'];
         if ($stock->stocks) return redirect('/stocks')->with('error', 'Raw Material is already in records.');
 
         $stock->stocks = $request->input('stocks');
@@ -96,19 +100,22 @@ class StockController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function update(Request $request, $id) {
-        $this->validate($request, [
+        $validatedData = $request->validate([
             'name' => 'required',
             'category' => 'required',
             'description' => 'required',
-            'stocks' => 'required'
-//            'procurement' => 'required'
+            'stocks' => 'required',
+            'unit' => 'required',
+            'demand' => 'required'
         ]);
 
         $stock = Stock::find($id);
-        $stock->name = $request->input('name');
-        $stock->category = $request->input('category');
-        $stock->description = $request->input('description');
-        $stock->stocks = $request->input('stocks');
+        $stock->name = $validatedData['name'];
+        $stock->category = $validatedData['category'];
+        $stock->description = $validatedData['description'];
+        $stock->stocks = $validatedData['stocks'];
+        $stock->unit = $validatedData['unit'];
+        $stock->demand = $validatedData['demand'];
 //        $stock->procurement = $request->input('procurement');
         $stock->save();
 

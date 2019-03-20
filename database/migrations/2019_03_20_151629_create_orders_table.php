@@ -14,9 +14,10 @@ class CreateOrdersTable extends Migration
     public function up()
     {
         Schema::create('orders', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->string('name');
             $table->double('total_capacity', 15, 4);
+            $table->double('total', 15, 4);
             $table->timestamp('ready_by')->nullable();
             $table->timestamps();
         });

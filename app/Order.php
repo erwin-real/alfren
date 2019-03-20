@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Order extends Model
 {
     protected $fillable = [
-        'name', 'total_capacity', 'ready_by'
+        'name', 'total_capacity', 'ready_by', 'total'
     ];
 
 //    public $sortable = [

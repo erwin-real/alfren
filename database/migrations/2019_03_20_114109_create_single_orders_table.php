@@ -14,9 +14,10 @@ class CreateSingleOrdersTable extends Migration
     public function up()
     {
         Schema::create('single_orders', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
             $table->unsignedInteger('order_id');
             $table->unsignedInteger('product_id');
+            $table->double('price', 15, 4);
             $table->unsignedInteger('quantity');
             $table->timestamps();
         });

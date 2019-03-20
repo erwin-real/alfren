@@ -47,7 +47,7 @@
                                     @endforeach
                                 @else
                                     <tr class="text-center">
-                                        <th colspan="4">No capacities found</th>
+                                        <th colspan="5">No capacities found</th>
                                     </tr>
                                 @endif
                             </tbody>

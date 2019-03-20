@@ -77,9 +77,17 @@
             var values = [];
             var ids = [];
             @foreach($stocks as $stock)
-            values.push('{{$stock->name}}' + ' | ' + ' {{$stock->category}} ' + ' | ' + '{{$stock->description}}');
-            ids.push('{{$stock->id}}');
+                values.push(convert(test('{{$stock->name}}' + ' | ' + ' {{$stock->category}} ' + ' | ' + '{{$stock->description}}')));
+                ids.push('{{$stock->id}}');
             @endforeach
+
+            function convert (string) {
+                return string.replace(/&#(?:x([\da-f]+)|(\d+));/ig, function (_, hex, dec) {
+                    return String.fromCharCode(dec || +('0x' + hex))
+                })
+            }
+
+            function test(string) { return string.replace(/&quot;/g,'"'); }
 
             function addRow() {
                 let td, tr;
