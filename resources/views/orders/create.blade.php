@@ -2,6 +2,26 @@
 
 @section('content')
 
+    <style>
+        /* Bootstrap 4 text input with search icon */
+
+        .has-search .form-control {
+            padding-left: 2.375rem;
+        }
+
+        .has-search .form-control-feedback {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            line-height: 2.375rem;
+            text-align: center;
+            pointer-events: none;
+            color: #aaa;
+        }
+    </style>
+
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
@@ -12,6 +32,8 @@
     <hr>
     @include('includes.messages')
 
+    <div id="alert">
+    </div>
 
     <span class="text-danger">* required</span>
 
@@ -43,7 +65,7 @@
         </div>
 
         <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
-            <label for="total">Total</label>: <b>P <input id="total"  type="text" name="total" readonly="readonly"></b>
+            <label for="total">Total</label>: <b>₱ <span id="temp"></span><input id="total"  type="hidden" name="total"></b>
         </div>
 
         <div class="form-group col-12">
@@ -106,16 +128,20 @@
             let node_number = document.createElement("input");
             node_number.type = 'number';
             node_number.name = 'quantity[]';
-            node_number.className = 'form-group';
+            node_number.className = 'form-control';
             node_number.setAttribute("required", "required");
             node_number.setAttribute("onkeyup","updateSubtotal(this)");
-            let subtotal = document.createTextNode("P 0");
-            td.appendChild(subtotal);
             td.appendChild(node_number);
             tr.appendChild(td);
 
             //PRICE
             td = document.createElement("td");
+            td.className = 'form-group has-search';
+
+            let subtotal = document.createElement("span");
+            subtotal.className = 'fa fa-peso form-control-feedback';
+            subtotal.innerText = '₱';
+
             let node_price = document.createElement("input");
             node_price.type = 'number';
             node_price.name = 'price[]';
@@ -123,12 +149,15 @@
             node_price.setAttribute("required", "required");
             node_price.setAttribute("step", "0.01");
             node_price.setAttribute("onkeyup","updateSubtotal(this)");
+            node_price.setAttribute("placeholder", "Price per unit");
+
+            td.appendChild(subtotal);
             td.appendChild(node_price);
             tr.appendChild(td);
 
             //SUBTOTAL
             td = document.createElement("td");
-            let node_subtotal = document.createTextNode("P 0");
+            let node_subtotal = document.createTextNode("₱ 0");
             td.appendChild(node_subtotal);
             tr.appendChild(td);
 
@@ -145,37 +174,74 @@
             tbody.appendChild(tr);
             document.getElementById('proceed').disabled = false;
         }
-
+        else if (totalProducts === 0 && document.getElementById('alert').children.length === 0) {
+            let div = document.createElement("div");
+            div.className = 'alert alert-danger';
+            div.innerText = 'Important! Insufficient raw materials.';
+            document.getElementById('alert').appendChild(div);
+        }
     }
 
     function updateSubtotal(r) {
         var temp = 0;
         var node = r.parentNode.parentNode.children;
         var quantity = node[1].children[0].value;
-        var price = node[2].children[0].value;
-        node[3].innerText = 'P ' + (price * quantity);
+        var price = node[2].children[1].value;
+        node[3].innerText = '₱ ' + (price * quantity).toLocaleString('en') ;
         setTotal();
     }
 
     function setTotal() {
         var temp = 0;
         var tBodyChildren = document.getElementById('materialsBody').children;
-        console.log(tBodyChildren[0].children[1].children[0].value);
         for(var i = 0; i < tBodyChildren.length; i++) {
-            if (tBodyChildren[i].children[1].children[0].value.length > 0 && tBodyChildren[i].children[2].children[0].value > 0)
-                temp += (parseFloat(tBodyChildren[i].children[1].children[0].value) * parseFloat(tBodyChildren[i].children[2].children[0].value));
+            if (tBodyChildren[i].children[1].children[0].value.length > 0 && tBodyChildren[i].children[2].children[1].value > 0)
+                temp += (parseFloat(tBodyChildren[i].children[1].children[0].value) * parseFloat(tBodyChildren[i].children[2].children[1].value));
         }
 
         document.getElementById("total").value = temp;
+        document.getElementById("temp").innerText = temp.toLocaleString('en');
     }
 
     function deleteRow(r) {
         let i = (r.parentNode.parentNode.rowIndex);
         document.getElementById("materialsTable").deleteRow(i);
 
-        if (document.getElementById("materialsTable").getElementsByTagName('tr')[1] == undefined)
+        if (document.getElementById("materialsTable").getElementsByTagName('tr')[1] === undefined)
             document.getElementById('proceed').disabled = true;
     }
+
+    // function checkStocks(r, evt, stocks){
+    //     var charCode = (evt.which) ? evt.which : event.keyCode;
+    //
+    //     if (
+    //         //0~9
+    //         charCode >= 48 && charCode <= 57 ||
+    //         //number pad 0~9
+    //         charCode >= 96 && charCode <= 105 ||
+    //         //backspace
+    //         charCode == 8 ||
+    //         //tab
+    //         charCode == 9 ||
+    //         //enter
+    //         charCode == 13 ||
+    //         //left, right, delete..
+    //         charCode >= 35 && charCode <= 46
+    //     ) {
+    //         //make sure the new value below the STOCKS
+    //         if(
+    //             (parseInt(r.value+String.fromCharCode(charCode), 10) <= stocks) ||
+    //             (parseInt(String.fromCharCode(charCode)+r.value, 10) <= stocks)
+    //         ) return true;
+    //     }
+    //
+    //     // evt.preventDefault();
+    //     // evt.stopPropagation();
+    //
+    //     updateSubtotal(r, stocks);
+    //
+    //     return false;
+    // }
 </script>
 
 @endsection

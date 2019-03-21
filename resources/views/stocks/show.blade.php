@@ -24,8 +24,8 @@
                 <div class="alert alert-danger">
                     <p class="font-weight-bold">THIS MATERIAL NEEDS TO REORDER.</p>
                     <p><b>On hand</b>: {{$stock->stocks}}</p>
-                    <p><b>Safety Stock</b>: {{ number_format((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</p>
-                    <p><b>Reorder Point</b>: {{ number_format((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</p>
+                    <p><b>Safety Stock</b>: {{ ceil((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</p>
+                    <p><b>Reorder Point</b>: {{ ceil((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</p>
                 </div>
             @endif
 
@@ -40,8 +40,8 @@
 {{--                <p><b>Average Daily</b>: {{ number_format((($stock->demand*4) / 31), 2, '.', ',') }}</p>--}}
 {{--                <p><b>Lead Time</b>: {{ number_format(((($stock->demand*4) / 31)*2), 2, '.', ',') }}</p>--}}
 {{--                <p><b>Maximum Daily</b>: {{ number_format((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)), 2, '.', ',') }}</p>--}}
-                <p><b>Safety Stock</b>: {{ number_format((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</p>
-                <p><b>Reorder Point</b>: {{ number_format((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</p>
+                <p><b>Safety Stock</b>: {{ ceil((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</p>
+                <p><b>Reorder Point</b>: {{ ceil((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</p>
                 <hr>
                 <p><b>Created at</b>: {{date('D M d, Y h:i A', strtotime($stock->created_at))}}</p>
                 <p><b>Updated at</b>: {{date('D M d, Y h:i A', strtotime($stock->updated_at))}}</p>

@@ -2,6 +2,26 @@
 
 @section('content')
 
+    <style>
+        /* Bootstrap 4 text input with search icon */
+
+        .has-search .form-control {
+            padding-left: 2.375rem;
+        }
+
+        .has-search .form-control-feedback {
+            position: absolute;
+            z-index: 2;
+            display: block;
+            width: 2.375rem;
+            height: 2.375rem;
+            line-height: 2.375rem;
+            text-align: center;
+            pointer-events: none;
+            color: #aaa;
+        }
+    </style>
+
     <!-- Breadcrumbs-->
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="/">Dashboard</a></li>
@@ -64,11 +84,11 @@
                                     <input type="text" class="form-control" name="quantities[]" required value="{{$quantities[$i]}}" hidden>
                                 </td>
                                 <td>
-                                    <span>{{$prices[$i]}}</span>
+                                    <span>₱ {{number_format($prices[$i], 2, '.', ',')}}</span>
                                     <input type="text" class="form-control" name="prices[]" required value="{{$prices[$i]}}" hidden>
                                 </td>
                                 <td>
-                                    <span>{{$subtotals[$i]}}</span>
+                                    <span>₱ {{number_format($subtotals[$i], 2, '.', ',')}}</span>
                                     <input type="text" class="form-control" name="subtotals[]" required value="{{$subtotals[$i]}}" hidden>
                                 </td>
                             </tr>
@@ -79,25 +99,30 @@
         </div>
 
         <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
-            <label for="name">Total Cost</label>
-            <input type="number" class="form-control" name="total" required value="{{$total}}" readonly>
+            <label for="name">Total Cost:</label>
+                <span> <b> ₱ {{ number_format($total, 2, '.', ',') }}</b></span>
+                {{--<input type="number" class="form-control" name="total" required value="{{ number_format($total, 2, '.', ',') }}" readonly>--}}
+                <input type="hidden" class="form-control" name="total" required value="{{$total}}" readonly>
         </div>
 
         <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
-            <label for="name">Total Capacity (hours)</label>
-            <input type="number" class="form-control" name="totalCapacity" required value="{{$totalCapacity}}" readonly>
+            <label for="name">Total Capacity (hours): </label>
+            <span> <b> {{ number_format($totalCapacity, 0, '.', ',') }}</b></span>
+            <input type="hidden" class="form-control" name="totalCapacity" required value="{{$totalCapacity}}" readonly>
         </div>
 
         @if($left < $totalCapacity)
             <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
                 <label for="name">Capacities left: </label>
-                <input type="text" class="form-control" value="{{$left}}" name="dateReady" required readonly>
+                <span> <b> {{ number_format($left, 0, '.', ',') }}</b></span>
+                <input type="hidden" class="form-control" value="{{$left}}" name="dateReady" required readonly>
             </div>
         @endif
         @if($left >= $totalCapacity && !$dups)
             <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
                 <label for="name">Ready By: </label>
-                <input type="text" class="form-control" name="dateReady" value="{{date('D M d, Y', strtotime($readyBy))}}" required readonly>
+                <span> <b>{{date('D. M d, Y', strtotime($readyBy))}}</b></span>
+                <input type="hidden" class="form-control" name="dateReady" value="{{date('D M d, Y', strtotime($readyBy))}}" required readonly>
             </div>
 
             <div class="form-group col-12">

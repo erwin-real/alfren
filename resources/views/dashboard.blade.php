@@ -126,17 +126,19 @@
                                 <tr>
                                     <th>Name</th>
                                     <th>Category</th>
-                                    <th>Stocks Remaining</th>
+                                    <th>On hand</th>
+                                    <th>Safety Stock</th>
+                                    <th>Reorder Point</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if(count($stocks) > 0)
-                                    @foreach($stocks as $stock)
-                                        <tr>
+                                    @foreach($stocks as $stock)<tr class="{{(((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)) >= $stock->stocks ? 'bg-warning' : ''}}">
                                             <td>{{$stock->name}}</td>
                                             <td>{{$stock->category}}</td>
                                             <td class="{{($stock->stocks <= 0) ? "text-danger font-weight-bold" : ""}}">{{$stock->stocks}}</td>
-                                            {{--<td>{{$stock->stocks}}</td>--}}
+                                        <td>{{ ceil((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
+                                        <td>{{ ceil((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
                                         </tr>
                                     @endforeach
                                 @else

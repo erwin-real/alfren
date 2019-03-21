@@ -33,7 +33,7 @@
                                         <p><b>Client's Name</b>: <br>&nbsp;&nbsp; {{$order->name}}</p>
                                         <p><b>Date Created</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->created_at))}}</p>
                                         <p><b>Ready By</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->ready_by))}}</p>
-                                        <p><b>Total Cost</b>: <br>&nbsp;&nbsp; {{$order->total}}</p>
+                                        <p><b>Total Cost</b>: <br>&nbsp;&nbsp;₱ {{ number_format($order->total, 2, '.', ',') }}</p>
                                         <p><a href="/orders/{{$order->id}}" class="btn btn-outline-info"><i class="fa fa-eye"></i> Show</a></p>
                                     </div>
 

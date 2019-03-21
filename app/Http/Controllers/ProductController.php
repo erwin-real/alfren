@@ -15,29 +15,21 @@ class ProductController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
+    public function __construct() { $this->middleware('auth'); }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() {
-        return view('products.index')
-            ->with("products", Product::orderBy('updated_at', 'asc')->paginate(20));
-    }
+    public function index() { return view('products.index')->with("products", Product::orderBy('updated_at', 'asc')->paginate(20)); }
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create() {
-        return view('products.create')->with("stocks", Stock::all());
-    }
+    public function create() { return view('products.create')->with("stocks", Stock::all()); }
 
     /**
      * Store a newly created resource in storage.
@@ -76,8 +68,6 @@ class ProductController extends Controller
         }
 
         return redirect('/products')->with('success', 'Product Created Successfully!');
-
-
     }
 
     /**
@@ -86,9 +76,7 @@ class ProductController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        return view('products.show')->with('product', Product::find($id));
-    }
+    public function show($id) { return view('products.show')->with('product', Product::find($id)); }
 
     /**
      * Show the form for editing the specified resource.
@@ -114,7 +102,6 @@ class ProductController extends Controller
         $product->name = $request->get('name');
         $product->description = $request->get('description');
         $product->capacity = $request->get('capacity');
-        $product->save();
 
         foreach ($product->stockToProducts as $stockToProduct) $stockToProduct->delete();
 
@@ -125,6 +112,9 @@ class ProductController extends Controller
             $stockToProduct->quantity = $request->get('number')[$i];
             $stockToProduct->save();
         }
+
+        $product->updated_at = $stockToProduct->updated_at;
+        $product->save();
 
         return redirect('/products')->with('success', 'Product Updated Successfully!');
     }

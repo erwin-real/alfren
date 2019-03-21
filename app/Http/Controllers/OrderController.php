@@ -40,19 +40,24 @@ class OrderController extends Controller
     public function create() {
         $products = collect();
         $isValid = true;
+        $count = 0;
+        $productStocks = collect();
 
         foreach (Product::all() as $product) {
             foreach ($product->stockToProducts as $stockToProduct) {
                 if ($stockToProduct->stock->stocks < $stockToProduct->quantity) $isValid = false;
+                else $count++;
             }
             if ($isValid) {
                 $products->push($product);
+                $productStocks->push($count);
                 $isValid = true;
             }
         }
 
         return view('orders.create')
-            ->with('products', $products);
+            ->with('products', $products)
+            ->with('productStocks', $productStocks);
     }
 
     /**
@@ -82,6 +87,9 @@ class OrderController extends Controller
         $prices = collect();
         $subtotals = collect();
         $totalCapacity = 0.0;
+//        $productStocks = collect();
+//        $temp = collect();
+
         for ($i = 0; $i < count($request->input('quantity')); $i++) {
             $products->push(Product::find($request->input('products')[$i]));
             $quantities->push($request->input('quantity')[$i]);
@@ -92,6 +100,14 @@ class OrderController extends Controller
 
         $totalCap = $totalCapacity;
 
+//        foreach ($products as $product) {
+//            foreach ($product->stockToProducts as $stockToProduct) {
+//                $temp->push(floor($stockToProduct->stock->stocks / $stockToProduct->quantity));
+//            }
+//            $productStocks->push($temp->min());
+//        }
+
+//        dd($productStocks, $quantities);
 
         $readyBy = 0;
         $capacities = Capacity::whereRaw('capacities.left > 0')->orderBy('capacity_date', 'asc')->get();
@@ -129,6 +145,7 @@ class OrderController extends Controller
             ->with('total', $request->input('total'))
             ->with('left', $this->computeLeft())
             ->with('capacities', Capacity::all())
+//            ->with('productStocks', $productStocks)
             ->with('dups', $dups);
     }
 
@@ -201,9 +218,7 @@ class OrderController extends Controller
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id) {
-        return view('orders.show')->with('order', Order::find($id));
-    }
+    public function show($id) { return view('orders.show')->with('order', Order::find($id)); }
 
     /**
      * Show the form for editing the specified resource.

@@ -19,7 +19,7 @@
             <p><b>Client's Name</b>: <br>&nbsp;&nbsp; {{$order->name}}</p>
             <p><b>Date Created</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->created_at))}}</p>
             <p><b>Ready By</b>: <br>&nbsp;&nbsp; {{date('D M d, Y', strtotime($order->ready_by))}}</p>
-            <p><b>Total Cost</b>: <br>&nbsp;&nbsp; {{$order->total}}</p>
+            <p><b>Total Cost</b>: <br>&nbsp;&nbsp; ₱ {{ number_format($order->total, 2, '.', ',') }}</p>
 
             <div class="w-100 text-center mb-4">
                 <a href="/orders/export/{{$order->id}}" target="_blank" class="btn btn-outline-success"><i class="fa fa-file-invoice"></i> EXPORT</a>
@@ -51,8 +51,8 @@
                                         <td>{{$item->product['name']}}</td>
                                         <td>{{$item->product['description']}}</td>
                                         <td>{{$item->quantity}}</td>
-                                        <td>{{$item->price}}</td>
-                                        <td>{{$item->quantity * $item->price}}</td>
+                                        <td>₱ {{ number_format($item->price, 2, '.', ',') }}</td>
+                                        <td>₱ {{ number_format(($item->quantity * $item->price), 2, '.', ',') }}</td>
                                     </tr>
                                 @endforeach
                                 </tbody>
