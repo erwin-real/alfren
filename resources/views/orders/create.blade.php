@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group col-12 col-md-5 col-sm-8 mt-4">
-            <label for="total">Total</label>: <b><input id="total" class="form-control" type="text" name="total" readonly="readonly"></b>
+            <label for="total">Total</label>: <b>P <input id="total"  type="text" name="total" readonly="readonly"></b>
         </div>
 
         <div class="form-group col-12">
@@ -106,9 +106,11 @@
             let node_number = document.createElement("input");
             node_number.type = 'number';
             node_number.name = 'quantity[]';
-            node_number.className = 'form-control';
+            node_number.className = 'form-group';
             node_number.setAttribute("required", "required");
             node_number.setAttribute("onkeyup","updateSubtotal(this)");
+            let subtotal = document.createTextNode("P 0");
+            td.appendChild(subtotal);
             td.appendChild(node_number);
             tr.appendChild(td);
 
@@ -126,7 +128,7 @@
 
             //SUBTOTAL
             td = document.createElement("td");
-            let node_subtotal = document.createTextNode("0");
+            let node_subtotal = document.createTextNode("P 0");
             td.appendChild(node_subtotal);
             tr.appendChild(td);
 
@@ -151,16 +153,18 @@
         var node = r.parentNode.parentNode.children;
         var quantity = node[1].children[0].value;
         var price = node[2].children[0].value;
-        node[3].innerText = price * quantity;
+        node[3].innerText = 'P ' + (price * quantity);
         setTotal();
     }
 
     function setTotal() {
         var temp = 0;
         var tBodyChildren = document.getElementById('materialsBody').children;
-        for(var i = 0; i < tBodyChildren.length; i++)
-            temp += parseFloat(tBodyChildren[i].children[3].innerText);
-        // console.log(parseFloat(tBodyChildren[i].children[3].innerText));
+        console.log(tBodyChildren[0].children[1].children[0].value);
+        for(var i = 0; i < tBodyChildren.length; i++) {
+            if (tBodyChildren[i].children[1].children[0].value.length > 0 && tBodyChildren[i].children[2].children[0].value > 0)
+                temp += (parseFloat(tBodyChildren[i].children[1].children[0].value) * parseFloat(tBodyChildren[i].children[2].children[0].value));
+        }
 
         document.getElementById("total").value = temp;
     }

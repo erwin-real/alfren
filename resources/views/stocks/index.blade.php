@@ -32,11 +32,11 @@
                                     <th>Category</th>
                                     <th>Description</th>
                                     <th>On hand</th>
-                                    <th>Demand</th>
+                                    {{--<th>Demand</th>--}}
                                     <th>Unit</th>
-                                    <th>Average Daily</th>
-                                    <th>Lead time</th>
-                                    <th>Maximum Daily</th>
+                                    {{--<th>Average Daily</th>--}}
+                                    {{--<th>Lead time</th>--}}
+                                    {{--<th>Maximum Daily</th>--}}
                                     <th>Safety Stock</th>
                                     <th>Reorder Point</th>
                                     <th>Show</th>
@@ -50,13 +50,13 @@
                                             <td>{{$stock->category}}</td>
                                             <td>{{$stock->description}}</td>
                                             <td class="{{($stock->stocks <= 0) ? "text-danger font-weight-bold" : ""}}">{{$stock->stocks}}</td>
-                                            <td>{{$stock->demand}}</td>
+                                            {{--<td>{{$stock->demand}}</td>--}}
                                             <td>{{$stock->unit}}</td>
-                                            <td>{{ number_format((($stock->demand*4) / 31), 2, '.', ',') }}</td>
-                                            <td>{{ number_format(((($stock->demand*4) / 31)*2), 2, '.', ',') }}</td>
-                                            <td>{{ number_format((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)), 2, '.', ',') }}</td>
-                                            <td>{{ number_format((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</td>
-                                            <td>{{ number_format((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)), 2, '.', ',') }}</td>
+{{--                                            <td>{{ number_format((($stock->demand*4) / 31), 2, '.', ',') }}</td>--}}
+{{--                                            <td>{{ number_format(((($stock->demand*4) / 31)*2), 2, '.', ',') }}</td>--}}
+{{--                                            <td>{{ number_format((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)), 2, '.', ',') }}</td>--}}
+                                            <td>{{ ceil((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
+                                            <td>{{ ceil((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
                                             <td class="text-center"><a href="/stocks/{{$stock->id}}"><i class="fa fa-eye"></i></a></td>
                                             {{--<td>{{$stock->stocks}}</td>--}}
                                             {{--<td class="{{($stock->stocks <= $stock->procurement) ? "text-danger font-weight-bold" : ""}}">{{$stock->procurement}}</td>--}}

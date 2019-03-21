@@ -31,8 +31,18 @@
         </div>
 
         <div class="form-group col-12 col-lg-4 col-md-7 col-sm-8 mt-4">
+            {{Form::label('unit', 'Unit')}} <span class="text-danger">*</span>
+            {{Form::text('unit', $stock->unit, ['class' => 'form-control', 'placeholder' => 'Enter Material\'s Unit', 'required' => 'required'])}}
+        </div>
+
+        <div class="form-group col-12 col-lg-4 col-md-7 col-sm-8 mt-4">
             {{Form::label('stocks', 'Number of Stocks')}} <span class="text-danger">*</span>
             {{Form::text('stocks', $stock->stocks, ['class' => 'form-control', 'placeholder' => 'Enter Number of Stocks', 'required' => 'required'])}}
+        </div>
+
+        <div class="form-group col-12 col-lg-4 col-md-7 col-sm-8 mt-4">
+            {{Form::label('demand', 'Demand')}} <span class="text-danger">*</span>
+            {{Form::number('demand', $stock->demand, ['class' => 'form-control', 'placeholder' => 'Enter Demand', 'required' => 'required'])}}
         </div>
 
 
