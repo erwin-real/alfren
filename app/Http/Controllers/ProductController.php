@@ -22,7 +22,7 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index() { return view('products.index')->with("products", Product::orderBy('updated_at', 'asc')->paginate(20)); }
+    public function index() { return view('products.index')->with("products", Product::orderBy('updated_at', 'desc')->paginate(20)); }
 
     /**
      * Show the form for creating a new resource.
@@ -98,6 +98,22 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
+        $my_arr = $request->get('stocks');
+        $dups = $new_arr = array();
+        foreach ($my_arr as $key => $val) {
+            if (!isset($new_arr[$val])) {
+                $new_arr[$val] = $key;
+            } else {
+                if (isset($dups[$val])) {
+                    $dups[$val][] = $key;
+                } else {
+                    $dups[$val] = array($key);
+                }
+            }
+        }
+
+        if ($dups) return redirect('/products')->with('error', 'Cannot update the product because it has duplicate raw materials!');
+
         $product = Product::find($id);
         $product->name = $request->get('name');
         $product->description = $request->get('description');

@@ -76,6 +76,7 @@
     <script type="text/javascript">
             var values = [];
             var ids = [];
+            var totalStocks = {{count($stocks)}}
             @foreach($stocks as $stock)
                 values.push(convert(test('{{$stock->name}}' + ' | ' + ' {{$stock->category}} ' + ' | ' + '{{$stock->description}}')));
                 ids.push('{{$stock->id}}');
@@ -90,48 +91,52 @@
             function test(string) { return string.replace(/&quot;/g,'"'); }
 
             function addRow() {
-                let td, tr;
-                let tbody = document.getElementById("materialsBody");
+                if (document.getElementById('materialsBody').children.length < totalStocks) {
+                    if (document.getElementsByClassName('select-class').length < totalStocks ) {
+                        let td, tr;
+                        let tbody = document.getElementById("materialsBody");
 
-                // for each outer array row
-                tr = document.createElement("tr");
+                        // for each outer array row
+                        tr = document.createElement("tr");
 
 
-                td = document.createElement("td");
-                let selectList = document.createElement("select");
-                selectList.setAttribute("class", "form-control");
-                selectList.name = 'stocks[]';
+                        td = document.createElement("td");
+                        let selectList = document.createElement("select");
+                        selectList.setAttribute("class", "form-control select-class");
+                        selectList.name = 'stocks[]';
 
-                for (let i = 0; i < values.length; i++) {
-                    let option = document.createElement("option");
-                    option.setAttribute("value", ids[i]);
-                    option.text = values[i];
-                    selectList.appendChild(option);
+                        for (let i = 0; i < values.length; i++) {
+                            let option = document.createElement("option");
+                            option.setAttribute("value", ids[i]);
+                            option.text = values[i];
+                            selectList.appendChild(option);
+                        }
+
+                        td.appendChild(selectList);
+                        tr.appendChild(td);
+
+
+                        td = document.createElement("td");
+                        let node_number = document.createElement("input");
+                        node_number.type = 'number';
+                        node_number.name = 'number[]';
+                        node_number.className = 'form-control';
+                        node_number.setAttribute("required", "required");
+                        td.appendChild(node_number);
+                        tr.appendChild(td);
+
+                        td = document.createElement("td");
+                        let node_del = document.createElement("i");
+                        node_del.className = 'fa fa-trash del-btn';
+                        node_del.style = "cursor:pointer";
+                        node_del.setAttribute("onclick", "deleteRow(this)");
+                        td.setAttribute("class", "text-center");
+                        td.appendChild(node_del);
+                        tr.appendChild(td);
+
+                        tbody.appendChild(tr);
+                    }
                 }
-
-                td.appendChild(selectList);
-                tr.appendChild(td);
-
-
-                td = document.createElement("td");
-                let node_number = document.createElement("input");
-                node_number.type = 'number';
-                node_number.name = 'number[]';
-                node_number.className = 'form-control';
-                node_number.setAttribute("required","required");
-                td.appendChild(node_number);
-                tr.appendChild(td);
-
-                td = document.createElement("td");
-                let node_del = document.createElement("i");
-                node_del.className = 'fa fa-trash del-btn';
-                node_del.style = "cursor:pointer";
-                node_del.setAttribute("onclick","deleteRow(this)");
-                td.setAttribute("class","text-center");
-                td.appendChild(node_del);
-                tr.appendChild(td);
-
-                tbody.appendChild(tr);
             }
 
             function deleteRow(r) {

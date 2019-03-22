@@ -94,13 +94,13 @@
                             </thead>
                             <tbody>
                                 @if(count($orders) > 0)
-                                    @foreach($orders as $order)
+                                    @for ($i = 0; ($i < 5 && $i < count($orders)); $i++)
                                         <tr>
-                                            <td>{{$order->name}}</td>
-                                            <td>{{date('D M d, Y h:i a', strtotime($order->created_at))}}</td>
-                                            <td>{{date('D M d, Y', strtotime($order->ready_by))}}</td>
+                                            <td>{{$orders[$i]->name}}</td>
+                                            <td>{{date('D M d, Y h:i a', strtotime($orders[$i]->created_at))}}</td>
+                                            <td>{{date('D M d, Y', strtotime($orders[$i]->ready_by))}}</td>
                                         </tr>
-                                    @endforeach
+                                    @endfor
                                 @else
                                     <tr class="text-center">
                                         <th colspan="3">No orders found</th>
@@ -133,14 +133,15 @@
                             </thead>
                             <tbody>
                                 @if(count($stocks) > 0)
-                                    @foreach($stocks as $stock)<tr class="{{(((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2)) >= $stock->stocks ? 'bg-warning' : ''}}">
-                                            <td>{{$stock->name}}</td>
-                                            <td>{{$stock->category}}</td>
-                                            <td class="{{($stock->stocks <= 0) ? "text-danger font-weight-bold" : ""}}">{{$stock->stocks}}</td>
-                                        <td>{{ ceil((((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
-                                        <td>{{ ceil((((($stock->demand*4) / 31)*2) + ((((($stock->demand*4) / 31) * .1) + (($stock->demand*4) / 31)) * 4) - ((($stock->demand*4) / 31)*2))) }}</td>
+                                    @for ($i = 0; ($i < 5 && $i < count($stocks)); $i++)
+                                        <tr class="{{(((($stocks[$i]->demand*4) / 31)*2) + ((((($stocks[$i]->demand*4) / 31) * .1) + (($stocks[$i]->demand*4) / 31)) * 4) - ((($stocks[$i]->demand*4) / 31)*2)) >= $stocks[$i]->stocks ? 'bg-warning' : ''}}">
+                                            <td>{{$stocks[$i]->name}}</td>
+                                            <td>{{$stocks[$i]->category}}</td>
+                                            <td class="{{($stocks[$i]->stocks <= 0) ? "text-danger font-weight-bold" : ""}}">{{$stocks[$i]->stocks}}</td>
+                                            <td>{{ ceil((((((($stocks[$i]->demand*4) / 31) * .1) + (($stocks[$i]->demand*4) / 31)) * 4) - ((($stocks[$i]->demand*4) / 31)*2))) }}</td>
+                                            <td>{{ ceil((((($stocks[$i]->demand*4) / 31)*2) + ((((($stocks[$i]->demand*4) / 31) * .1) + (($stocks[$i]->demand*4) / 31)) * 4) - ((($stocks[$i]->demand*4) / 31)*2))) }}</td>
                                         </tr>
-                                    @endforeach
+                                    @endfor
                                 @else
                                     <tr class="text-center">
                                         <th colspan="3">No stocks found</th>
@@ -171,13 +172,13 @@
                             </thead>
                             <tbody>
                                 @if(count($products) > 0)
-                                    @foreach($products as $product)
+                                    @for ($i = 0; ($i < 5 && $i < count($products)); $i++)
                                         <tr>
-                                            <td>{{$product->name}}</td>
-                                            <td>{{$product->description}}</td>
-                                            <td>{{$product->capacity}}</td>
+                                            <td>{{$products[$i]->name}}</td>
+                                            <td>{{$products[$i]->description}}</td>
+                                            <td>{{$products[$i]->capacity}}</td>
                                         </tr>
-                                    @endforeach
+                                    @endfor
                                 @else
                                     <tr class="text-center">
                                         <th colspan="3">No products found</th>
